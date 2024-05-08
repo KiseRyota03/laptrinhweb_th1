@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thuc hanh 1: Cookie</title>
+</head>
+<body>
+<h1>Cookie Example</h1>
+<form id="nameForm">
+    <label for="name">Enter your name:</label>
+    <input type="text" id="name" name="name">
+    <button type="submit">Save</button>
+</form>
+<p id="greeting"></p>
+<button id="deleteCookie">Delete Cookie</button>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const nameForm = document.getElementById('nameForm');
+    const greeting = document.getElementById('greeting');
+    const deleteCookieButton = document.getElementById('deleteCookie');
+
+    // Function to set cookie
+    function setCookie(name, value, days) {
+        const expires = new Date();
+        expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
+        document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
+    }
+
+    // Function to get cookie by name
+    function getCookie(name) {
+        const cookies = document.cookie.split(';');
+        for (let cookie of cookies) {
+            const [cookieName, cookieValue] = cookie.split('=');
+            if (cookieName.trim() === name) {
+                return cookieValue;
+            }
+        }
+        return null;
+    }
+
+    // Function to delete cookie by name
+    function deleteCookie(name) {
+        document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;`;
+    }
+
+    // Check if name cookie exists
+    const userName = getCookie('name');
+    if (userName) {
+        alert(`Xin chào ${userName}!`);
+    }
+
+    // Event listener for form submission
+    nameForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+        const nameInput = document.getElementById('name');
+        const userName = nameInput.value.trim();
+        if (userName !== '') {
+            setCookie('name', userName, 7); // Save name in cookie for 7 days
+            greeting.textContent = `Xin chào ${userName}!`;
+        }
+    });
+
+    // Event listener for delete cookie button
+    deleteCookieButton.addEventListener('click', function() {
+        deleteCookie('name');
+        greeting.textContent = '';
+    });
+});
+</script>
+</body>
+</html>
